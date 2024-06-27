@@ -1,0 +1,131 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); */
+
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  padding: 20px;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 20px;
+}
+
+.ngo-content {
+  flex: 1;
+  color: #fff;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.image-upload-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-upload-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px dashed #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.upload-placeholder {
+  color: #fff;
+  opacity: 0.7;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.image-preview {
+  max-width: 100%;
+  border-radius: 10px;
+ margin-top: 1rem;
+}
+
+form {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+form label {
+  margin-bottom: 5px;
+}
+
+form input, form select, form button {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+form input[type="file"] {
+  border: none;
+}
+
+form button {
+  /* background: #8e44ad; */
+  color: #131212;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+form button:hover {
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+
+button[type="file"] {
+  margin-left: 3rem;
+  margin-top: 1rem;
+  background-color: #edf0f3;
+  color: rgb(11, 11, 11);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 8rem;
+}
+
+button[type="file"]:hover {
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.brought-by-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.brought-by-container input {
+  width: 480%; 
+}
+

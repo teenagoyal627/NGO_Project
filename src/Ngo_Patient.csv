@@ -1,0 +1,11 @@
+,_id,RegistrationNo,Name,FatherName,Gender,Address,RegistrationDate,MeanOfTransportation,BroughtBy,PatientCondition,LanguageKnown,HospitalDepartment,SentToHome,OPD,InmateNumber,AadharNumber,__v
+0,66598712a385dc4e011f9954,3543524,Miss. Susmita kumari,fadfa,Female,dfa,2024-05-31,asdfa,fdas,fas,sdfas,dfasf,2024-05-31,3532.0,53453.0,3534432.0,0
+1,6659877aa385dc4e011f9958,23232,Miss.  kumari,mr.rajesh kumar,Female,Rajasthan,2024-05-31,By Train,Mr.Rajesh Kumari,comma Patient,English,Solanki hospital,2024-05-31,435.0,4523452.0,523452452.0,0
+2,665987cda385dc4e011f995b,4223412,Miss. Susmita kumari,mr.rajesh kumar,Female,Rajasthan,2024-05-31,By Train,Mr.Rajesh Kumari,comma Patient,English,Solanki hospital,2024-05-16,24123.0,4123.0,412333.0,0
+3,665987eea385dc4e011f995e,52345425,,,,,,,,,,,,,,,0
+4,6673b1711d0191519c3a1630,7875,,,,,,,,,,,,,,,0
+5,6673c8341d0191519c3a1637,12333,,,,,,,,,,,,,,,0
+6,6673c9451d0191519c3a163e,1234567,,,,,,,,,,,,,,,0
+7,6673d3771d0191519c3a1645,222198,,,,,,,,,,,,,,,0
+8,6673d3fa1d0191519c3a164b,111,sujata,,,,,,,,,,,,,,0
+9,6673d6521d0191519c3a164e,23232,karishma,ramesh,Female,Alwar,2024-06-20,By bus,Mr.Rajesh Kumari,illness,hindi,gupta,2024-06-12,,,,0
