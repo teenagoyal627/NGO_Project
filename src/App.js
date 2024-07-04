@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import React from 'react';
 import Form from './Component/PatientForm/Form';
-import Navbar from './Component/Navbar/Navbar';
 import Login from './Component/Authentication/Login';
 import Signup from "./Component/Authentication/Signup";
 import AllPatientDetails from "./Component/PatientData/AllPatientDetails";
@@ -25,3 +24,8 @@ const App = () => {
 }
 
 export default App;
+
+
+// yarn start
+// start mongodb
+//run server by node Server.js in terminal

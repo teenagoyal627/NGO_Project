@@ -1,62 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FaPrint } from "react-icons/fa6";
 import { useHistory } from "react-router-dom";
-import './AllPatientData.css';
-import HomeNavBar from '../Navbar/HomeNavBar';
-import SapnaLogo from '../Navbar/Logo/SapnaLogo.png';
-import Report from './Report';
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import { database } from '../../Firebase';
+import "./AllPatientData.css";
+import HomeNavBar from "../Navbar/HomeNavBar";
+import SapnaLogo from "../Navbar/Logo/SapnaLogo.png";
+import Report from "./Report";
+import { collection, getDocs } from "firebase/firestore";
+import { database } from "../../Firebase";
 
 const AllPatientDetails = () => {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [data,setData] = useState([])
+  const [imgData, setImgData] = useState([]);
+  const [docData, setDocData] = useState([]);
 
   const history = useHistory();
 
-
   useEffect(() => {
-    axios.get('http://localhost:5000/data')
-      .then(response => {
+    axios
+      .get("http://localhost:5000/data")
+      .then((response) => {
         setPatients(response.data);
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
-  }, []);
-  
-  const getData = async () =>{
-    const valRef = collection(database,'ImageUrlData')
-    const dataDb = await getDocs(valRef)
-    const allData = dataDb.docs.map(val=>({...val.data(),id:val.id}))
-    setData(allData)
-    console.log(dataDb)
-}
 
-useEffect(()=>{
-    getData()
-},[]) 
+    const getImageData = async (RegistrationNo) => {
+      const ImgRef = collection(database, "ImageUrlData");
+      const ImgDb = await getDocs(ImgRef);
+      const allImgData = ImgDb.docs.map((img) => {
+        // console.log( 'img.id', img.id,'type of',typeof img.id)
+        return {
+          ...img.data(),
+          id: img.id,
+        }
+      });
+      setImgData(allImgData);
+      // console.log(allImgData);
+      const patientImage=allImgData.find((img)=>Number(img.id)===RegistrationNo)
+      return patientImage ?patientImage.url:"no image"
+    };
+
+    const getDocumentData = async () => {
+      const docRef = collection(database, "PatientsDocuments");
+      const docDb = await getDocs(docRef)
+      const allDocData = docDb.docs.map((doc) => {
+        return {
+          ...doc.data(),
+          id: doc.id,
+        };
+      });
+      // console.log(allDocData);
+      setDocData(allDocData);
+    };
+    getImageData();
+    getDocumentData();
+  }, []);
+
   const editHandler = (id) => {
-    console.log("Edit button clicked");
+    console.log("Edit button clicked")
     console.log(id);
-    history.push(`/home/${id}`);
+    history.push(`/home/${id}`)
   };
 
   const deleteHandler = async (id) => {
     console.log("Delete button clicked");
     const response = await axios.delete(`http://localhost:5000/data/${id}`);
     console.log(response);
-    setPatients(prevPatients => prevPatients.filter(patient => patient._id !== id));
+    setPatients((prevPatients) =>
+      prevPatients.filter((patient) => patient._id !== id)
+    );
   };
 
-  const printHandler = (patient) => {
-    setSelectedPatient(patient);
-    setShowModal(true);
+
+  const getImageForPrint = async (RegistrationNo) => {
+    const ImgRef = collection(database, "ImageUrlData");
+    const ImgDb = await getDocs(ImgRef);
+    const allImgData = ImgDb.docs.map((img) => ({
+      ...img.data(),
+      id: img.id,
+    }));  
+    const patientImage = allImgData.find((img) => Number(img.id) === RegistrationNo);
+    if (patientImage) {
+      return patientImage.imgUrl;
+    } else {
+      return "no image";
+    }
+  };
+    
+  const printHandler =async (patient) => {
+    try{
+      const imageUrl=await getImageForPrint(patient.RegistrationNo)
+      console.log(imageUrl)
+      setSelectedPatient({...patient,imageUrl});
+      setShowModal(true);
+    }catch(error){
+      console.error("show error ",error)
+    }
   };
 
   const closeModal = () => {
@@ -67,12 +112,12 @@ useEffect(()=>{
   return (
     <>
       <HomeNavBar />
-      <Report patients={patients} setPatients={setPatients}/>
+      <Report patients={patients} setPatients={setPatients} />
       <div className="table-responsive">
         <table className="table">
           <thead>
             <tr>
-            <th>Sr No.</th>
+              <th>Sr No.</th>
               <th>RegistrationNo</th>
               <th>Name</th>
               <th>FatherName</th>
@@ -99,9 +144,13 @@ useEffect(()=>{
             </tr>
           </thead>
           <tbody>
-            {patients.map((patient, index) => (
-              <tr key={index}>
-              <td>{index+1}</td>
+            {patients.map((patient, index) => {
+              const patientImage=imgData.find((img)=>Number(img.id)===patient.RegistrationNo)
+              const patientDocuments=docData.find((doc)=>Number(doc.id)===patient.RegistrationNo)
+            
+              return (
+                <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{patient.RegistrationNo}</td>
                 <td>{patient.Name}</td>
                 <td>{patient.FatherName}</td>
@@ -110,7 +159,11 @@ useEffect(()=>{
                 <td>{patient.RegistrationDate}</td>
                 <td>{patient.MeanOfTransportation}</td>
                 <td>
-                  {`${patient.BroughtBy?.Name || '...'}, ${patient.BroughtBy?.Address || '...'}, ${patient.BroughtBy?.MobileNumber || '...'}, ${patient.BroughtBy?.Aadhar || '...'}`}
+                  {`${patient.BroughtBy?.Name || "..."}, ${
+                    patient.BroughtBy?.Address || "..."
+                  }, ${patient.BroughtBy?.MobileNumber || "..."}, ${
+                    patient.BroughtBy?.Aadhar || "..."
+                  }`}
                 </td>
                 <td>{patient.PatientCondition}</td>
                 <td>{patient.LanguageKnown}</td>
@@ -122,34 +175,91 @@ useEffect(()=>{
                 <td>{patient.IONumber}</td>
                 <td>{patient.IOName}</td>
                 <td>{patient.AadharNumber}</td>
-                <td>{
-                data.map(value=><div>
-                    <img src={value.imgUrl} height='200px' width='200px' /> 
-                </div>)
-             }</td>
-                <td>{patient.UploadedDocuments}</td>
-            
-                <td onClick={() => editHandler(patient._id)}><FaEdit className="icon" /></td>
-                <td onClick={() => deleteHandler(patient._id)}><MdDelete className="icon" /></td>
-                <td onClick={() => printHandler(patient)}><FaPrint className="icon" /></td>
+                <td>{patientImage && <img src={patientImage.imgUrl} height="200px" width="200px" alt="Patient" />}</td>
+                <td>
+                    {patientDocuments?.PatientsDocuments.map((docUrl, index) => (
+                      <div key={index}>
+                        <a href={docUrl} target="_blank" rel="noopener noreferrer">Document {index + 1}</a>
+                      </div>
+                    ))}
+                  </td>
+                <td onClick={() => editHandler(patient._id)}>
+                  <FaEdit className="icon" />
+                </td>
+                <td onClick={() => deleteHandler(patient._id)}>
+                  <MdDelete className="icon" />
+                </td>
+                <td onClick={() => printHandler(patient)}>
+                  <FaPrint className="icon" />
+                </td>
               </tr>
-            ))}
+              )
+              
+            })}
           </tbody>
         </table>
       </div>
 
       {showModal && selectedPatient && (
-        <div className="modal fade show" style={{ display: "block", margin: "0", padding: "0", boxSizing: "border-box" }} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
-            <div className="modal-content print-modal-content" style={{ position: "absolute", left: "0", top: "0", width: "110mm", minHeight: "297mm", boxSizing: "border-box", background: "white" }}>
-              <div className="modal-header">
-                <img src={SapnaLogo} alt='logo of ngo' className='logo-image1' />
-                <h1 className="modal-title fs-5" id="exampleModalLabel">Aandam-Home for the homeless ({selectedPatient.AandamCenter})</h1>
-                <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
-              </div>
-              <div className="modal-body print-body">
+        <div
+    className="modal fade show"
+    style={{
+        display: "block",
+        margin: "0",
+        padding: "0",
+        boxSizing: "border-box",
+    }}
+    id="exampleModal"
+    tabIndex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+>
+    <div className="modal-dialog">
+        <div
+            className="modal-content print-modal-content"
+            style={{
+                position: "absolute",
+                left: "0",
+                top: "0",
+                width: "210mm",
+                minHeight: "297mm",
+                boxSizing: "border-box",
+                background: "white",
+            }}
+        >
+            <div className="modal-header">
+                <img
+                    src={SapnaLogo}
+                    alt="logo of ngo"
+                    className="logo-image1"
+                />
+                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                    Aandam-Home for the homeless ({selectedPatient.AandamCenter ? selectedPatient.AandamCenter : "No "})
+                </h1>
+                <button
+                    type="button"
+                    className="btn-close"
+                    onClick={closeModal}
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div className="modal-body print-body">
                 <table className="print-table">
-                  <tbody>
+                    <tbody>
+                    <tr>
+                      <td>Patient Image</td>
+                      <td>
+                  {selectedPatient.imageUrl ? (
+                    <img
+                      src={selectedPatient.imageUrl}
+                      alt="Patient"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  ) : (
+                    'No Image Available'
+                  )}
+                </td>  
+                 </tr>
                     <tr>
                       <td>Registration No:</td>
                       <td>{selectedPatient.RegistrationNo}</td>
@@ -179,9 +289,10 @@ useEffect(()=>{
                       <td>{selectedPatient.MeanOfTransportation}</td>
                     </tr>
                     <tr>
-                      <td>Brought By:</td>
-                      <td>{`${selectedPatient.BroughtBy?.Name || '...'}, ${selectedPatient.BroughtBy?.Address || '...'}, ${selectedPatient.BroughtBy?.MobileNumber || '...'}, ${selectedPatient.BroughtBy?.Aadhar || '...'}`}</td>
+                    <td>Brought By:</td>
+                      <td>{`${selectedPatient.BroughtBy?.Name || "..."}, ${selectedPatient.BroughtBy?.Address || "..."}, ${selectedPatient.BroughtBy?.MobileNumber || "..."}, ${selectedPatient.BroughtBy?.Aadhar || "..."}`}</td>
                     </tr>
+
                     <tr>
                       <td>Patient Condition:</td>
                       <td>{selectedPatient.PatientCondition}</td>
@@ -222,22 +333,32 @@ useEffect(()=>{
                       <td>Aadhar Number:</td>
                       <td>{selectedPatient.AadharNumber}</td>
                     </tr>
-                  </tbody>
+                    </tbody>
                 </table>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={() => window.print()}>Print</button>
-              </div>
             </div>
-          </div>
+            <div className="modal-footer">
+                <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={closeModal}
+                >
+                    Close
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => window.print()}
+                >
+                    Print
+                </button>
+            </div>
         </div>
+    </div>
+</div>
+
       )}
     </>
   );
 };
 
 export default AllPatientDetails;
-
-
-

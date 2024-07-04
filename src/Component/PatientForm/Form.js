@@ -4,17 +4,12 @@ import axios from "axios";
 import "./Form.css";
 import DialogBox from "./ DialogBox";
 import HomeNavBar from "../Navbar/HomeNavBar";
-import { storage,database } from "../../Firebase";
-import { v4 } from "uuid";
-import { ref, uploadBytes,getDownloadURL } from "firebase/storage";
-import StoreImageTextFirebase from "./image";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { storage } from "../../Firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Form = () => {
   const { id } = useParams();
   const [image, setImage] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [ImageUrl, setImageUrl] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [formData, setFormData] = useState({
     RegistrationNo: "",
@@ -48,75 +43,52 @@ const Form = () => {
         .get(`http://localhost:5000/data/${id}`)
         .then((response) => {
           setFormData(response.data);
+          console.log(response.data);
         })
         .catch((error) => {
           console.error("Error fetching patient data:", error);
         });
     }
   }, [id]);
-  
 
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   setImageUrl(file);
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImagePreview(reader.result);
-  //       setImageUrl(e.target.files[0]);
-  //       setImage(reader.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-  const handleImageChange = (e) =>{
-    console.log(e.target.files[0])
-    const file = e.target.files[0];
-    setImageUrl(file);
-    if (file) {
+  const handleImageChange = (e) => {
+    const ImageObject = e.target.files[0];
+    const ImageName = `${ImageObject.name}`;
+    if (ImageObject) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setImageUrl(e.target.files[0]);
         setImage(reader.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(ImageObject);
     }
-    const imgs = ref(storage,`PatientsImages/${v4()}`)
-    uploadBytes(imgs,e.target.files[0]).then(data=>{
-        console.log(data,"imgs")
-        getDownloadURL(data.ref).then(val=>{
-            setImage(val)
-        })
-    })
-}
+    const imgs = ref(storage, `PatientsImages/${ImageName}`);
+    uploadBytes(imgs, e.target.files[0]).then((data) => {
+      console.log(data, "imgs");
+      getDownloadURL(data.ref).then((url) => {
+        console.log("Image Url  ", url);
+        setImage(url);
+      });
+    });
+  };
 
-  // const uploadImage = () => {
-  //   if (!ImageUrl) {
-  //     console.error("No file selected");
-  //     return;
-  //   }
-
-  //   const imags = ref(storage, `Patients/${v4()}`);
-  //   uploadBytes(imags, ImageUrl).then((data) => {
-  //     console.log(data, "imags");
-  //     getDownloadURL(data.ref).then(val=>{
-  //       setImage(val)
-  //   });
-  // })
-  // };
-
-  const uploadImage = async () =>{
-    console.log("Upload button is clicked")
-        const valRef = collection(database,'ImageUrlData')
-        await addDoc(valRef,{imgUrl:image})
-        alert("Image Uploaded successfully")
-}
 
   const handleDocumentChange = (e) => {
     const files = Array.from(e.target.files);
-    setDocuments(files);
-    files.map((file) => file.name);
+    const uploadPromises = files.map((file) => {
+      const uniqueFileName = `${file.name}`; // Unique file name generation
+      const folderPath = `PatientsDocuments/${formData.RegistrationNo}/`; // Folder structure
+      const uploadedDocument = ref(storage, folderPath + uniqueFileName);
+      return uploadBytes(uploadedDocument, file).then((data) => getDownloadURL(data.ref));
+    });
+  
+    Promise.all(uploadPromises)
+      .then((urls) => {
+        console.log("All documents uploaded and URLs received:", urls);
+        setDocuments(urls); // Set URLs in state or wherever needed
+      })
+      .catch((error) => {
+        console.error("Error uploading documents:", error);
+      });
   };
 
   const handleChange = (e) => {
@@ -157,21 +129,19 @@ const Form = () => {
                 name="ImageUrl"
                 onChange={handleImageChange}
               />
-              {!imagePreview && (
+              {!image && (
                 <div className="upload-placeholder">
                   Upload the image of patient
                 </div>
               )}
-              {imagePreview && (
+              {image && (
                 <img
-                  src={imagePreview}
+                  src={image}
                   alt="Patient Preview"
                   className="image-preview"
+                  style={{ width: "200px", height: "200px" }}
                 />
               )}
-              <button type="file" onClick={(e) => uploadImage(e)}>
-                Upload
-              </button>
             </div>
           </div>
         </div>
@@ -395,13 +365,10 @@ const Form = () => {
             documents={documents}
             setFormData={setFormData}
             id={id}
-            ImageUrl={ImageUrl}
             image={image}
-            setImage={setImage}
           />
         </form>
       </div>
-      <StoreImageTextFirebase/>
     </>
   );
 };

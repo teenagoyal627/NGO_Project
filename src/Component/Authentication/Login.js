@@ -4,7 +4,6 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
 import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth } from "../../Firebase";
-import VijayMandir from './VijayMandir.jpeg'
 import Navbar from "../Navbar/Navbar";
 
 const Login = () => {
