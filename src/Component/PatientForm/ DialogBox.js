@@ -7,7 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import axios from "axios";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { database } from "../../Firebase";
+import { database } from "../../Firebase1";
 
 const DialogBox = ({ formData, setFormData, documents, id, image }) => {
   console.log(documents);

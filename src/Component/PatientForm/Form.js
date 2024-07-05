@@ -4,7 +4,7 @@ import axios from "axios";
 import "./Form.css";
 import DialogBox from "./ DialogBox";
 import HomeNavBar from "../Navbar/HomeNavBar";
-import { storage } from "../../Firebase";
+import { storage } from "../../Firebase1";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Form = () => {

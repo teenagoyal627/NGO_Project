@@ -9,7 +9,7 @@ import HomeNavBar from "../Navbar/HomeNavBar";
 import SapnaLogo from "../Navbar/Logo/SapnaLogo.png";
 import Report from "./Report";
 import { collection, getDocs } from "firebase/firestore";
-import { database } from "../../Firebase";
+import { database } from "../../Firebase1";
 
 const AllPatientDetails = () => {
   const [patients, setPatients] = useState([]);
@@ -184,6 +184,7 @@ const AllPatientDetails = () => {
                     ))}
                   </td>
                 <td onClick={() => editHandler(patient._id)}>
+                {console.log(typeof(patient._id))}
                   <FaEdit className="icon" />
                 </td>
                 <td onClick={() => deleteHandler(patient._id)}>

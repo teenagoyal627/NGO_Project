@@ -20,20 +20,20 @@ function DialogBox({ formData, setFormData, documents, id, imageUrl }) {
     history.push("/patientdata");
   };
 
-//   const validateForm = () => {
-//     if (!formData.RegistrationNo) {
-//       alert("Registration Number is required");
-//       return false;
-//     }
-//     return true;
-//   };
+  const validateForm = () => {
+    if (!formData.RegistrationNo) {
+      alert("Registration Number is required");
+      return false;
+    }
+    return true;
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    // if (!validateForm()) {
-    //   return;
-    // }
+    if (!validateForm()) {
+      return;
+    }
 
     const data = new FormData();
     Object.keys(formData).forEach((key) => {
