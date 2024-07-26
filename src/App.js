@@ -1,22 +1,26 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import React from 'react';
-import Form from './Component/PatientForm/Form';
-import Login from './Component/Authentication/Login';
-import Signup from "./Component/Authentication/Signup";
-import AllPatientDetails from "./Component/PatientData/AllPatientDetails";
-import Report from "./Component/PatientData/Report";
+import Form from './Component/PatientForm/MainPage.js/FormPage';
+import Login from './Component/Authentication/Login/Login';
+import Signup from "./Component/Authentication/Signup/Signup";
+import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import FrontPage from "./Component/FrontPage/FrontPage";
+import AllPatientDetails from "./Component/PatientData/MainPage/PatientDetails";
+// import FilterData from "./Component/PatientData/Filter/MainFilter";
 
 const App = () => {
   return (
     <Router>
       <div>
-        {/* <Navbar /> */}
+        
         <Switch>
-          <Route  path="/home/:id?" component={Form} />
-          <Route exact path="/" component={Login} />
+        <Route path='/'exact><FrontPage/></Route>
+          <Route  path="/form/:id?" component={Form} />
+          <Route exact path="/login" component={Login} />
           <Route path="/signup" component={Signup}/>
           <Route path="/patientdata" component={AllPatientDetails}/>
-          <Route path="/report" component={Report}/>
+          {/* <Route path="/report" component={FilterData}/> */}
         </Switch>
       </div>
     </Router>

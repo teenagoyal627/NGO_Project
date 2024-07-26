@@ -109,6 +109,91 @@ app.delete("/data/:id", (req, res) => {
     });
 });
 
+
+// app.get("/data", async (req, res) => {
+
+//   console.log("receiveing request to data route")
+//   const { startDate, endDate, gender } = req.query;
+//   console.log("the start and end and gender are",startDate,endDate,gender)
+
+//   const matchStage = {};
+
+//   // Parse dates only if they are provided
+//   if (startDate || endDate) {
+//     matchStage.RegistrationDate = {};
+//     if (startDate) {
+//       matchStage.RegistrationDate.$gte = new Date(startDate);
+//     }
+//     if (endDate) {
+//       matchStage.RegistrationDate.$lte = new Date(endDate);
+//     }
+//   }
+
+//   // Add gender filter only if at least one gender is checked
+//   if (gender && (gender.Male || gender.Female)) {
+//     matchStage.Gender = { $in: [] };
+//     if (gender.Male) matchStage.Gender.$in.push("Male");
+//     if (gender.Female) matchStage.Gender.$in.push("Female");
+//   }
+
+//   console.log("matchStage:", matchStage);
+
+//   try {
+//     const filteredPatients = await User.aggregate([{ $match: matchStage }]);
+
+//     console.log("filteredPatients:", filteredPatients);
+
+//     res.json(filteredPatients);
+//   } catch (err) {
+//     console.error("Error in aggregation pipeline:", err);
+//     res.status(500).send("Server error");
+//   }
+// });
+
+
+//this is for filter the data 
+app.post("/filter", async (req, res) => {
+  const { startDate, endDate, gender } = req.body;
+  console.log(" filter the start and end and gender are",startDate,endDate,gender)
+
+  const matchStage = {};
+
+  if (startDate || endDate) {
+    matchStage.RegistrationDate = {};
+    if (startDate) {
+      matchStage.RegistrationDate.$gte = startDate;
+    }
+    if (endDate) {
+      matchStage.RegistrationDate.$lte = endDate;
+    }
+  }
+if(gender){
+  const genderFilter=JSON.parse(gender)
+  //  console.log(genderFilter)
+  const genders=[]
+  if(genderFilter.Male)genders.push("Male")
+  if(genderFilter.Female)genders.push("Female")
+    if(genders.length>0){
+      matchStage.Gender={$in:genders}
+    }
+  
+}
+
+  console.log("matchStage:", matchStage);
+
+  try {
+    const filteredPatients = await User.aggregate([
+      { $match: matchStage },
+    ]);
+    console.log("filteredPatients:", filteredPatients);
+    res.json(filteredPatients);
+  } catch (err) {
+    console.error("Error in aggregation pipeline:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

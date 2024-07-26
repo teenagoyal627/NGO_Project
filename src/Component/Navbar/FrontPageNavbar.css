@@ -69,3 +69,11 @@ nav ul li a:hover {
   color: #9b59b6;
   text-decoration: none;
 }
+
+
+@media screen and (max-width:800px) {
+  nav ul li {
+    margin-right: 50px;
+    align-items: center;
+  }
+}

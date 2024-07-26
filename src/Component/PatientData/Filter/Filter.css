@@ -31,3 +31,10 @@
 .gender-checkbox input[type="checkbox"] {
   margin-right: 5px;
 }
+ @media screen and (max-width:1000px) {
+  .filter_button {
+    
+    margin: 3rem 0 0 20rem;
+  }
+  
+ }
