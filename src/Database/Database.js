@@ -6,6 +6,7 @@ const BroughtBySchema=new mongoose.Schema({
     Aadhar:{type:String},
 },{_id:false})
 const ReactFormDataSchema=new mongoose.Schema({
+    UserId:{type:String},
     RegistrationNo:{type:Number},
     Name:{type:String},
     FatherName:{type:String},

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { MessageBox } from "../../MessageBox";
 import { dialogBoxSubmitHandler,dialogBoxConfirm } from "./Utility";
+import { getAuth } from "firebase/auth";
 const DialogBox = ({ formData, setFormData, documents, id, image }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({
@@ -9,10 +10,12 @@ const DialogBox = ({ formData, setFormData, documents, id, image }) => {
     body: ""
   });
   const history = useHistory();
-
+const auth=getAuth()
+const userId=auth.currentUser.uid 
+console.log("userId form dialog box",userId)
   return (
     <React.Fragment>
-      <button onClick={(e)=>dialogBoxSubmitHandler(e,setModalContent,setShowModal,formData,documents,image,setFormData,id)}>Submit</button>
+      <button onClick={(e)=>dialogBoxSubmitHandler(e,setModalContent,setShowModal,formData,documents,image,setFormData,id,userId)}>Submit</button>
       <MessageBox
         showModal={showModal}
         handleClose={() => setShowModal(false)}

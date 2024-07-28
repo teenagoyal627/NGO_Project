@@ -14,6 +14,7 @@ import {
 import TableFormate from "../TablePatientData/TableFormate";
 import PrintModal from "../TablePatientData/PrintModal";
 import FilterData from "../Filter/MainFilter";
+import { getAuth } from "firebase/auth";
 
 const AllPatientDetails = () => {
   const [patients, setPatients] = useState([]);
@@ -25,14 +26,22 @@ const AllPatientDetails = () => {
   const history = useHistory();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/data")
-      .then((response) => {
-        setPatients(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    const auth = getAuth();
+    const userId = auth.currentUser.uid;
+
+    if (userId) {
+      axios
+        .get(`http://localhost:5000/data`, {
+          params: { userId },
+        })
+
+        .then((response) => {
+          setPatients(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
 
     const getImageData = async (RegistrationNo) => {
       const ImgRef = collection(database, "ImageUrlData");

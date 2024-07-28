@@ -102,7 +102,6 @@ const TableFormate = ({
                   ))}
                 </td>
                 <td onClick={() => editHandler(patient._id)}>
-                  {console.log(typeof patient._id)}
                   <FaEdit className="icon" />
                 </td>
                 <td onClick={() => deleteHandler(patient._id)}>

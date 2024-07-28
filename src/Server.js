@@ -26,6 +26,7 @@ app.put("/data/:id", (req, res) => {
 app.post("/insert", async (req, res) => {
   try {
     const {
+      userId,
       RegistrationNo,
       Name,
       FatherName,
@@ -47,6 +48,7 @@ app.post("/insert", async (req, res) => {
     } = req.body;
 
     const formData = new User({
+      UserId:userId,
       RegistrationNo,
       Name,
       FatherName,
@@ -79,7 +81,11 @@ app.post("/insert", async (req, res) => {
 });
 
 app.get("/data", (req, res) => {
-  User.find()
+  const {userId}=req.query;
+  if(!userId){
+    return res.status(400).json({error:"UserId is required"})
+  }
+  User.find({UserId:userId})
     .then((users) => res.json(users))
     .catch((err) => res.json(err));
 });
@@ -108,48 +114,6 @@ app.delete("/data/:id", (req, res) => {
       res.status(400).json({ message: "Failed to delete patient" });
     });
 });
-
-
-// app.get("/data", async (req, res) => {
-
-//   console.log("receiveing request to data route")
-//   const { startDate, endDate, gender } = req.query;
-//   console.log("the start and end and gender are",startDate,endDate,gender)
-
-//   const matchStage = {};
-
-//   // Parse dates only if they are provided
-//   if (startDate || endDate) {
-//     matchStage.RegistrationDate = {};
-//     if (startDate) {
-//       matchStage.RegistrationDate.$gte = new Date(startDate);
-//     }
-//     if (endDate) {
-//       matchStage.RegistrationDate.$lte = new Date(endDate);
-//     }
-//   }
-
-//   // Add gender filter only if at least one gender is checked
-//   if (gender && (gender.Male || gender.Female)) {
-//     matchStage.Gender = { $in: [] };
-//     if (gender.Male) matchStage.Gender.$in.push("Male");
-//     if (gender.Female) matchStage.Gender.$in.push("Female");
-//   }
-
-//   console.log("matchStage:", matchStage);
-
-//   try {
-//     const filteredPatients = await User.aggregate([{ $match: matchStage }]);
-
-//     console.log("filteredPatients:", filteredPatients);
-
-//     res.json(filteredPatients);
-//   } catch (err) {
-//     console.error("Error in aggregation pipeline:", err);
-//     res.status(500).send("Server error");
-//   }
-// });
-
 
 //this is for filter the data 
 app.post("/filter", async (req, res) => {

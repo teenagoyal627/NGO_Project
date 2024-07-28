@@ -64,7 +64,7 @@ export const handleDocumentChange = (
     .catch((error) => {
       setModalContent({
         title: "Error",
-        body: "Error uploading documents",
+        body: `Error uploading documents: ${error.message}`
       });
       setShowModal(true);
       console.error("Error uploading documents:", error);

@@ -45,9 +45,6 @@ export  const getImageForPrint = async (RegistrationNo) => {
     setSelectedPatient(null);
   };
 
-  export 
-  const editHandler = (id,history) => {
-    console.log("Edit button clicked")
-    console.log(id);
+  export  const editHandler = (id,history) => {
     history.push(`/form/${id}`)
   };

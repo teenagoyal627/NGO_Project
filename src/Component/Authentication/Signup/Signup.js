@@ -32,7 +32,6 @@ const Signup = () => {
         signupSubmitHandler={(e) =>
           signupSubmitHandler(
             e,
-            setSignupFields,
             signupFields,
             setModalContent,
             setShowModal

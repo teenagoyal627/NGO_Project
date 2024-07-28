@@ -46,7 +46,8 @@ const FilterData = ({ setPatients }) => {
               setPatients,
               setModalContent,
               setShowModal,
-              setShowFilterModal
+              setShowFilterModal,
+              setFilters
             )
           }
         />

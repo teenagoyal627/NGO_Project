@@ -16,6 +16,8 @@ export const loginSubmitHandler = (
     try{
         e.preventDefault();
         const auth = getAuth();
+        const userId=auth.currentUser.uid
+         console.log(userId)
         signInWithEmailAndPassword(auth, loginField.email, loginField.password)
           .then(() => {
             setModalContent({
@@ -86,10 +88,8 @@ export const loginHandleConfirm = (
   }
 };
 
-//signup utilites................
 export const signupSubmitHandler = async (
   e,
-  setSignupFields,
   signupFields,
   setModalContent,
   setShowModal
@@ -104,6 +104,7 @@ export const signupSubmitHandler = async (
     )
       .then((userCredential) => {
         const userId = userCredential.user.uid;
+        console.log(userId)
         if (userId != null) {
           setModalContent({
             title: "Success",
@@ -133,6 +134,8 @@ export const signupSubmitHandler = async (
     }
   }
 };
+
+
 
 export const signupChangeHandler = (e, setSignupFields) => {
   const { id, value } = e.target;
