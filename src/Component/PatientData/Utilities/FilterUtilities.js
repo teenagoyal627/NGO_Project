@@ -35,7 +35,8 @@ export const filterHandler = async (
   setModalContent,
   setShowModal,
   setShowFilterModal,
-  setFilters
+  setFilters,
+  userId
 ) => {
   e.preventDefault();
   const gender = JSON.stringify(filters.gender);
@@ -44,6 +45,7 @@ export const filterHandler = async (
       startDate: filters.startDate,
       endDate: filters.endDate,
       gender,
+      userId
     });
     const filteredData = response.data;
     if (filteredData.length > 0) {

@@ -58,7 +58,7 @@ export const handleDocumentChange = (
 
   Promise.all(uploadPromises)
     .then((urls) => {
-      // console.log("All documents uploaded and URLs received:", urls);
+      console.log("All documents uploaded and URLs received:", urls);
       setDocuments(urls);
     })
     .catch((error) => {

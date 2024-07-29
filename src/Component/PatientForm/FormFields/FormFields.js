@@ -12,6 +12,8 @@ const FormFields = ({
     handleDocumentChange,
     id
 }) => {
+  console.log(documents)
+  console.log(image)
   return (
    
     <div className="form-container">
@@ -265,7 +267,10 @@ const FormFields = ({
         setFormData={setFormData}
         id={id}
         image={image}
+        
       />
+      {console.log(image)}
+      {console.log(documents)}
     </form>
   </div>
   )

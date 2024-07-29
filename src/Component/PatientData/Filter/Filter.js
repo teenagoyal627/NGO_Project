@@ -5,7 +5,8 @@ import {
   handleDateChange,
   handleGenderChange,
   filterHandler,
-} from "./Utilities/FilterUtilities";
+} from "../Utilities/FilterUtilities";
+import { getAuth } from "firebase/auth";
 
 const FilterData = ({ setPatients }) => {
   const [filters, setFilters] = useState({
@@ -22,7 +23,9 @@ const FilterData = ({ setPatients }) => {
   const [modalContent, setModalContent] = useState({ title: "", body: "" });
 
   const modalRef = useRef(null);
-
+  const auth=getAuth()
+  const userId=auth.currentUser.uid;
+  // console.log(userId)
   return (
     <div>
       <button
@@ -47,7 +50,8 @@ const FilterData = ({ setPatients }) => {
               setModalContent,
               setShowModal,
               setShowFilterModal,
-              setFilters
+              setFilters,
+              userId
             )
           }
         />

@@ -48,6 +48,11 @@ const Form = () => {
     body: "",
   });
   const history = useHistory();
+
+useEffect(()=>{
+  console.log("docuemts state update",documents)
+},[documents])
+
   useEffect(() => {
     if (id) {
       axios

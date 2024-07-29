@@ -45,6 +45,8 @@ app.post("/insert", async (req, res) => {
       IONumber,
       IOName,
       AadharNumber,
+      ImageUrl,
+      PatientsDocuments
     } = req.body;
 
     const formData = new User({
@@ -67,6 +69,8 @@ app.post("/insert", async (req, res) => {
       IONumber,
       IOName,
       AadharNumber,
+      ImageUrl,
+      PatientsDocuments
     });
 
     await formData.save();
@@ -117,10 +121,10 @@ app.delete("/data/:id", (req, res) => {
 
 //this is for filter the data 
 app.post("/filter", async (req, res) => {
-  const { startDate, endDate, gender } = req.body;
-  console.log(" filter the start and end and gender are",startDate,endDate,gender)
+  const { startDate, endDate, gender,userId } = req.body;
+  // console.log(" filter the start and end and gender are",startDate,endDate,gender,userId)
 
-  const matchStage = {};
+  const matchStage = {UserId:userId};
 
   if (startDate || endDate) {
     matchStage.RegistrationDate = {};
@@ -143,7 +147,7 @@ if(gender){
   
 }
 
-  console.log("matchStage:", matchStage);
+  // console.log("matchStage:", matchStage);
 
   try {
     const filteredPatients = await User.aggregate([

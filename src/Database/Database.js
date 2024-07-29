@@ -25,8 +25,8 @@ const ReactFormDataSchema=new mongoose.Schema({
     IONumber:{type:Number},
     IOName:{type:String},
     AadharNumber:{type:Number},
-    image:{type:String}
-
+    ImageUrl:{type:String},
+    PatientsDocuments:{type:[String]}
 })
 const User=mongoose.model('patientdatas',ReactFormDataSchema)
 module.exports=User

@@ -1,4 +1,4 @@
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc,  setDoc } from "firebase/firestore";
 import axios from "axios";
 import { database } from "../../../Firebase";
 
@@ -18,8 +18,10 @@ export const dialogBoxSubmitHandler = async (
   image,
   setFormData,
   id,
-  userId
+  userId,
 ) => {
+  console.log(documents)
+  console.log(image)
   e.preventDefault();
   if (!validateForm(formData)) {
     setModalContent({
@@ -47,8 +49,12 @@ export const dialogBoxSubmitHandler = async (
   );
 
   try {
+    console.log("saving the patients documents")
     await setDoc(docRef, { PatientsDocuments: documents }, { merge: true });
     console.log("Document updated successfully");
+
+    const savedDoc=await getDoc(docRef)
+    console.log("saved documetns ",savedDoc.data())
   } catch (error) {
     console.error("Error updating document:", error);
   }
